@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Local databases
+*.db
+server/*.db
+server/test-docflow.db
+
+# Environment variables
+.env
+server/.env
+
+# Build outputs
+dist/
+client/dist/
+
+# OS files
+.DS_Store
+Thumbs.db
