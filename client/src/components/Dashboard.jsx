@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, FileText, Share2, Trash2, Upload, LogOut, Clock, User, AlertCircle, Sparkles, FolderClosed, FileSymlink } from 'lucide-react';
 
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:5000'
+  : 'https://docflow-qgsx.onrender.com';
+
 export default function Dashboard({ user, onLogout, onSelectDocument }) {
   const [ownedDocs, setOwnedDocs] = useState([]);
   const [sharedDocs, setSharedDocs] = useState([]);
@@ -20,13 +24,13 @@ export default function Dashboard({ user, onLogout, onSelectDocument }) {
       const headers = { 'x-user-id': user.id };
 
       // Fetch owned
-      const ownedRes = await fetch('http://localhost:5000/api/documents', { headers });
+      const ownedRes = await fetch(`${API_BASE}/api/documents`, { headers });
       if (!ownedRes.ok) throw new Error('Failed to load your documents');
       const ownedData = await ownedRes.json();
       setOwnedDocs(ownedData);
 
       // Fetch shared
-      const sharedRes = await fetch('http://localhost:5000/api/shared-documents', { headers });
+      const sharedRes = await fetch(`${API_BASE}/api/shared-documents`, { headers });
       if (!sharedRes.ok) throw new Error('Failed to load shared documents');
       const sharedData = await sharedRes.json();
       setSharedDocs(sharedData);
@@ -40,7 +44,7 @@ export default function Dashboard({ user, onLogout, onSelectDocument }) {
 
   const handleCreateDocument = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/documents', {
+      const response = await fetch(`${API_BASE}/api/documents`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -68,7 +72,7 @@ export default function Dashboard({ user, onLogout, onSelectDocument }) {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api/documents/${docId}`, {
+      const response = await fetch(`${API_BASE}/api/documents/${docId}`, {
         method: 'DELETE',
         headers: {
           'x-user-id': user.id
@@ -106,7 +110,7 @@ export default function Dashboard({ user, onLogout, onSelectDocument }) {
       const title = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
 
       try {
-        const response = await fetch('http://localhost:5000/api/documents/import', {
+        const response = await fetch(`${API_BASE}/api/documents/import`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

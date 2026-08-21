@@ -8,6 +8,10 @@ import {
   UserPlus, Check, Eye, Trash2
 } from 'lucide-react';
 
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:5000'
+  : 'https://docflow-qgsx.onrender.com';
+
 export default function Editor({ user, documentId, onBack }) {
   const [doc, setDoc] = useState(null);
   const [title, setTitle] = useState('');
@@ -63,7 +67,7 @@ export default function Editor({ user, documentId, onBack }) {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch(`http://localhost:5000/api/documents/${documentId}`, {
+      const response = await fetch(`${API_BASE}/api/documents/${documentId}`, {
         headers: { 'x-user-id': user.id }
       });
 
@@ -107,7 +111,7 @@ export default function Editor({ user, documentId, onBack }) {
   const saveDocument = async (updatedTitle, updatedContent) => {
     if (isReadOnly) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/documents/${documentId}`, {
+      const response = await fetch(`${API_BASE}/api/documents/${documentId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -139,7 +143,7 @@ export default function Editor({ user, documentId, onBack }) {
     setShareSuccess('');
 
     try {
-      const response = await fetch(`http://localhost:5000/api/documents/${documentId}/share`, {
+      const response = await fetch(`${API_BASE}/api/documents/${documentId}/share`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -160,7 +164,7 @@ export default function Editor({ user, documentId, onBack }) {
       setShareEmail('');
       
       // Refresh shares list
-      const sharesRes = await fetch(`http://localhost:5000/api/documents/${documentId}`, {
+      const sharesRes = await fetch(`${API_BASE}/api/documents/${documentId}`, {
         headers: { 'x-user-id': user.id }
       });
       if (sharesRes.ok) {
